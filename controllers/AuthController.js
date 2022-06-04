@@ -34,3 +34,16 @@ exports.verifyAuthSignature = async function (req, res, next) {
     );
   }
 };
+
+exports.testMiddleware = async function (req, res, next) {
+  try {
+    console.log(req.verifiedAddress);
+  } catch (error) {
+    return res.status(500).send(
+      JSON.stringify({
+        status: networkNotification.serverError.code,
+        message: networkNotification.serverError.message
+      })
+    );
+  }
+};
