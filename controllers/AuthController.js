@@ -1,12 +1,7 @@
-const { Blob } = require("buffer");
-const dotenv = require("dotenv");
 const ethers = require("ethers");
-const jwt = require("jsonwebtoken");
 
 ////////////////////////////////
 const networkNotification = require("../network/notification");
-
-dotenv.config({ path: "../config/.env" });
 
 exports.verifyAuthSignature = async function (req, res, next) {
   try {
