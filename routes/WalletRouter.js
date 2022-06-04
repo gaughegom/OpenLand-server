@@ -1,15 +1,15 @@
-const walletController = require('../controllers/WalletController')
-const express = require('express')
-const router = express.Router()
+const walletController = require("../controllers/WalletController");
+const express = require("express");
+const router = express.Router();
 
 router
-  .route('/wallet/:id')
+  .route("/:id")
   .delete(walletController.removeWallet)
   .put(walletController.updateWallet)
-  .get(walletController.getAWallet)
+  .get(walletController.getAWallet);
 router
-  .route('/wallet')
+  .route("/")
   .post(walletController.addWallet)
-  .get(walletController.getAllWallets)
+  .get(walletController.getAllWallets);
 
-module.exports = router
+module.exports = router;
