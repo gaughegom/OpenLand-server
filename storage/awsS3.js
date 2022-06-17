@@ -19,7 +19,8 @@ exports.uploadFileS3 = function (prefix, buffer, postKey) {
   const uploadParams = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
     Body: buffer,
-    Key: `${prefix}/${postKey}`
+    Key: `${prefix}/${postKey}`,
+    ContentType: "image/jpeg"
   };
 
   return s3.upload(uploadParams).promise();

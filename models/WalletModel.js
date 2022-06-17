@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const walletSchema = new mongoose.Schema({
   address: String,
   displayName: String,
-  imageURL: String,
+  imageUrl: String,
   bannerUrl: String,
   description: String,
   email: String

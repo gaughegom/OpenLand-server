@@ -18,7 +18,7 @@ exports.verifyAuthSignature = async function (req, res, next) {
       time: Date(),
       address: recoverAddress.toLowerCase()
     };
-    const accessToken = jwt.sign(data, jwtSecretKey, { expiresIn: "2h" });
+    const accessToken = jwt.sign(data, jwtSecretKey, { expiresIn: "24h" });
 
     return res.status(200).send(JSON.stringify({ accessToken }));
   } catch (err) {

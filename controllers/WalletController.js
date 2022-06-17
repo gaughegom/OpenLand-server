@@ -1,16 +1,19 @@
 const mongoose = require("mongoose");
 const WalletModel = require("../models/WalletModel");
+const { uploadFileS3 } = require("../storage/awsS3");
 
 exports.getAWallet = async (req, res) => {
   try {
     var { address } = req.params;
+
+    address = address.toLowerCase();
 
     var wallet = await WalletModel.findOne({ address }).exec();
     if (wallet) {
       res.status(200).json(wallet);
     } else {
       var newWallet = new WalletModel({
-        address: address.lowercase(),
+        address
       });
       await newWallet.save();
       res.status(200).json(newWallet);
@@ -23,7 +26,48 @@ exports.getAWallet = async (req, res) => {
 };
 
 exports.updateWallet = async (req, res) => {
-  res.status(200).json("asdf");
+  // lay thong req
+  const address = req.verifiedAddress;
+  const fileAvt = req.files.fileAvt;
+  const fileBanner = req.files.fileBanner;
+  const displayName = req.body.displayName;
+  const description = req.body.description;
+  const email = req.body.email;
+
+  // lay upload
+  var sendAvt;
+  var sendBanner;
+  if (fileAvt) {
+    sendAvt = await uploadFileS3("wallet/avatar", fileAvt.data, address);
+  }
+  if (fileBanner)
+    sendBanner = await uploadFileS3("wallet/banner", fileBanner.data, address);
+
+  // update info
+  var newWallet = {};
+  if (displayName) {
+    newWallet.displayName = displayName;
+  }
+  if (description) {
+    newWallet.description = description;
+  }
+  if (email) {
+    newWallet.email = email;
+  }
+  if (sendAvt) {
+    newWallet.imageUrl = sendAvt.Location;
+    console.log("set newWallet imageUrl");
+  }
+  if (sendBanner) {
+    newWallet.bannerUrl = sendBanner.Location;
+  }
+  // find and update
+  const updatedWallet = await WalletModel.findOneAndUpdate(
+    { address },
+    newWallet,
+    { new: true }
+  );
+  res.status(200).json(updatedWallet);
 };
 
 // const mongoose = require("mongoose");
