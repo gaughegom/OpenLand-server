@@ -1,4 +1,5 @@
 const ethers = require("ethers");
+const jwt = require("jsonwebtoken");
 
 ////////////////////////////////
 const networkNotification = require("../network/notification");
@@ -15,7 +16,7 @@ exports.verifyAuthSignature = async function (req, res, next) {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
     let data = {
       time: Date(),
-      address: recoverAddress
+      address: recoverAddress.toLowerCase()
     };
     const accessToken = jwt.sign(data, jwtSecretKey, { expiresIn: "2h" });
 
