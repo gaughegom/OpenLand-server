@@ -5,7 +5,8 @@ const walletSchema = new mongoose.Schema({
   displayName: String,
   imageURL: String,
   bannerUrl: String,
-  description: String
+  description: String,
+  email: String
 });
 
 walletSchema.methods.isValid = function () {
