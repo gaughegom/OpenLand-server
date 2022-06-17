@@ -28,8 +28,8 @@ exports.getAWallet = async (req, res) => {
 exports.updateWallet = async (req, res) => {
   // lay thong req
   const address = req.verifiedAddress;
-  const fileAvt = req.files.fileAvt;
-  const fileBanner = req.files.fileBanner;
+  const fileAvt = req.files?.fileAvt;
+  const fileBanner = req.files?.fileBanner;
   const displayName = req.body.displayName;
   const description = req.body.description;
   const email = req.body.email;
