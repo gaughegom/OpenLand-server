@@ -128,3 +128,19 @@ exports.updateStatus = async (req, res) => {
     res.status(500).json({ message: e.message });
   }
 };
+
+exports.updateOwner = async (req, res) => {
+    try {
+        const { token, tokenId, owner } = req.body;
+
+        const updatedItem = await ItemModel.findOneAndUpdate(
+            { token, tokenId },
+            { owner },
+            { new: true }
+        );
+
+        res.status(200).json(updatedItem);
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+};
