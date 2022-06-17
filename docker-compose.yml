@@ -14,8 +14,8 @@ services:
     build: .
     container_name: node-server
     ports:
-      - "5000:5000"
-      - "4433:4433"
+      - "80:5000"
+      - "443:4433"
     environment:
       - DATABASE_LOCAL=mongodb://mongo:27017/OPENSEA
     depends_on:
