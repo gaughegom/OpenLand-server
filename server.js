@@ -2,6 +2,9 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const app = require("./app");
 const Wallet = require("./models/WalletModel");
+const https = require("https");
+const path = require("path");
+const fs = require("fs");
 
 dotenv.config({ path: "./config/.env" });
 const port = process.env.DEFAULT_PORT || 5000;
@@ -23,3 +26,13 @@ mongoose
 app.listen(port, () => {
   console.log(`App running on port ${port}`);
 }); // start the server
+
+const sslServer = https.createServer(
+  {
+    key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+    cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem"))
+  },
+  app
+);
+
+sslServer.listen(4433, () => console.log("Server enable https"));
