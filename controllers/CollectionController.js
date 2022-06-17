@@ -51,8 +51,8 @@ exports.getAllCollections = async (req, res) => {
 };
 exports.getCollectionsByOwner = async (req, res) => {
   try {
-    const { address } = req.params;
-    const collections = await CollectionModel.find({ address }).exec();
+    const { creator } = req.params;
+    const collections = await CollectionModel.find({ creator }).exec();
     res.status(200).json(collections);
   } catch (e) {
     res.status(500).json({ message: e.message });

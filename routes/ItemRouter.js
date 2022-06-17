@@ -8,6 +8,9 @@ const router = express.Router();
 //   .put(walletController.updateWallet)
 //   .get(walletController.getAWallet);
 router.route("/").post(itemController.insertItem);
+router.route('/status').put(itemController.updateStatus);
+router.route('/price').put(itemController.updatePrice);
+router.route('/owner').put(itemController.updateOwner);
 // .post(itemController.addWallet)
 // .put(itemController);
 
