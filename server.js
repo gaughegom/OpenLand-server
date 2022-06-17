@@ -6,7 +6,7 @@ const https = require("https");
 const path = require("path");
 const fs = require("fs");
 
-dotenv.config({ path: "./config/.env" });
+dotenv.config({ path: "./.env" });
 const port = process.env.DEFAULT_PORT || 5000;
 
 // const DB = process.env.DATABASE_DOMAIN.replace(
@@ -14,6 +14,9 @@ const port = process.env.DEFAULT_PORT || 5000;
 //   process.env.DATABASE_PASSWORD
 // )
 const DB = process.env.DATABASE_LOCAL;
+
+// TODO:console
+console.log("db", DB);
 
 mongoose
   .connect(DB, {

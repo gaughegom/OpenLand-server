@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 
-dotenv.config({ path: "../config/.env" });
+dotenv.config({ path: "../.env" });
 
 function authMiddleware(req, res, next) {
   try {
