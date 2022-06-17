@@ -10,7 +10,7 @@ exports.getAWallet = async (req, res) => {
       res.status(200).json(wallet);
     } else {
       var newWallet = new WalletModel({
-        address
+        address: address.lowercase(),
       });
       await newWallet.save();
       res.status(200).json(newWallet);

@@ -11,7 +11,7 @@ const itemSchema = new mongoose.Schema({
   owner: String,
   owneDisplay: String,
   ipfsUrl: String,
-  status: String,
+  status: Number,
   endAt: Date
 });
 
