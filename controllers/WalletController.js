@@ -4,7 +4,7 @@ const { uploadFileS3 } = require("../storage/awsS3");
 
 exports.getAWallet = async (req, res) => {
   try {
-    var { address } = req.params;
+    var { address } = req.body;
 
     address = address.toLowerCase();
 

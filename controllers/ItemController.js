@@ -6,11 +6,21 @@ const { uploadFileS3, getFileStreamS3 } = require("../storage/awsS3");
 const helper = require("./helper");
 
 // get
-exports.getItemByToken = async (req, res) => {
+exports.getItemByTokenId = async (req, res) => {
     try {
-        const { token, tokenID } = req.body;
+        const { token, tokenID } = req.params;
         const item = ItemModel.findOne({ token, tokenID }).exec();
         res.status(200).json(item);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+exports.getItemByToken = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const items = ItemModel.find({ token }).exec();
+        res.status(200).json(items);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -29,7 +39,7 @@ exports.getAllItem = async (req, res) => {
 
 exports.getItemsByOwner = async (req, res) => {
     try {
-        const { address } = req.body;
+        const { address } = req.params;
         const items = ItemModel.find({ owner: address }).exec();
         res.status(200).json(items);
     } catch (err) {
@@ -53,7 +63,6 @@ exports.insertItem = async (req, res) => {
         console.log(req.body);
 
         var hardcodeTokenId = "adfds";
-        var hardcodeOwnerAddress = "asdfsdf32342234s";
 
         properties = JSON.parse(properties);
 
@@ -90,14 +99,33 @@ exports.insertItem = async (req, res) => {
 //update
 
 exports.updatePrice = async (req, res) => {
-  try {
-    const {token, tokenId , price} = req.body
-  item.price = price
+    try {
+        const { token, tokenId, price } = req.body;
 
-  const updatedItem = await ItemModel.findOneAndUpdate({token,tokenId},{price})
+        const updatedItem = await ItemModel.findOneAndUpdate(
+            { token, tokenId },
+            { price },
+            { new: true }
+        );
 
-  res.status(200).json(updatedItem);
-  } catch (e) {
-    res.status(500).json({message: e.message})
-  }
-}
+        res.status(200).json(updatedItem);
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+};
+
+exports.updateStatus = async (req, res) => {
+    try {
+        const { token, tokenId, status } = req.body;
+
+        const updatedItem = await ItemModel.findOneAndUpdate(
+            { token, tokenId },
+            { status },
+            { new: true }
+        );
+
+        res.status(200).json(updatedItem);
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+};
