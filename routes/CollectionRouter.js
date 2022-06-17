@@ -9,6 +9,7 @@ const router = express.Router();
 //   .put(walletController.updateWallet)
 //   .get(walletController.getAWallet);
 router.route("/").post(auth, collectionController.insertCollection);
+router.route("/:address").get(collectionController.getCollectionsByOwner);
 // .post(itemController.addWallet)
 // .put(itemController);
 
