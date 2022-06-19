@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const CollectionModel = require("../models/CollectionModel");
+const WalletModel = require("../models/WalletModel");
 const { uploadFileS3 } = require("../storage/awsS3");
 
 exports.insertCollection = async (req, res) => {
@@ -43,7 +44,17 @@ exports.insertCollection = async (req, res) => {
 
 exports.getAllCollections = async (req, res) => {
   try {
-    const collections = await CollectionModel.find().exec();
+    const collections = await CollectionModel.find().lean().exec();
+    // const wallets = await WalletModel.find().lean().exec();
+
+    // const result = collections.map((item) => {
+    //   const wallet = wallets.find((wallet) => wallet.address === item.creator);
+    //   return {
+    //     ...item,
+    //     displayName: wallet.displayName
+    //   };
+    // });
+    console.log(collections);
     res.status(200).json(collections);
   } catch (e) {
     res.status(500).json({ message: e.message });

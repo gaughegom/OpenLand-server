@@ -8,6 +8,7 @@ const router = express.Router();
 //   .delete(walletController.removeWallet)
 //   .put(walletController.updateWallet)
 //   .get(walletController.getAWallet);
+router.route("/all").get(collectionController.getAllCollections);
 router.route("/").post(auth, collectionController.insertCollection);
 router.route("/:creator").get(collectionController.getCollectionsByOwner);
 // .post(itemController.addWallet)

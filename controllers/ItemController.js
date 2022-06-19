@@ -27,14 +27,40 @@ exports.getItemByToken = async (req, res) => {
 };
 
 exports.getAllItem = async (req, res) => {
-  try {
-    const allItem = await ItemModel.find({
-      status: { $in: [1, 2] }
-    }).exec();
-    res.status(200).json(allItem);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+  // try {
+  //   const allItem = await ItemModel.find({
+  //     status: { $in: [1, 2] }
+  //   }).exec();
+  //   res.status(200).json(allItem);
+  // } catch (err) {
+  //   res.status(500).json({ message: err.message });
+  // }
+
+  ItemModel.aggregate([
+    {
+      $lookup: {
+        from: "wallets",
+        localField: "owner",
+        foreignField: "address",
+        as: "ownerInfo"
+      }
+    },
+    {
+      $lookup: {
+        from: "collections",
+        localField: "token",
+        foreignField: "token",
+        as: "collectionInfo"
+      }
+    }
+  ]).exec((err, result) => {
+    if (err) {
+      console.log("error", err);
+    }
+    if (result) {
+      res.status(200).json(result);
+    }
+  });
 };
 
 exports.getItemsByOwner = async (req, res) => {
@@ -130,17 +156,17 @@ exports.updateStatus = async (req, res) => {
 };
 
 exports.updateOwner = async (req, res) => {
-    try {
-        const { token, tokenId, owner } = req.body;
+  try {
+    const { token, tokenId, owner } = req.body;
 
-        const updatedItem = await ItemModel.findOneAndUpdate(
-            { token, tokenId },
-            { owner },
-            { new: true }
-        );
+    const updatedItem = await ItemModel.findOneAndUpdate(
+      { token, tokenId },
+      { owner },
+      { new: true }
+    );
 
-        res.status(200).json(updatedItem);
-    } catch (e) {
-        res.status(500).json({ message: e.message });
-    }
+    res.status(200).json(updatedItem);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
 };
