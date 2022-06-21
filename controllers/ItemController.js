@@ -210,7 +210,7 @@ exports.updateStatus = async (req, res) => {
 
         const updatedItem = await ItemModel.findOneAndUpdate(
             { token, tokenId },
-            { status },
+            { status: +status },
             { new: true }
         );
 
