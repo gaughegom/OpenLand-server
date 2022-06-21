@@ -76,7 +76,7 @@ exports.getCollectionsByOwner = async (req, res) => {
     try {
         const { creator } = req.params;
         const creatorLower = creator.toLowerCase();
-        const collections = await CollectionModel.find({ creatorLower }).exec();
+        const collections = await CollectionModel.find({ creator: creatorLower }).exec();
         res.status(200).json(collections);
     } catch (e) {
         res.status(500).json({ message: e.message });
