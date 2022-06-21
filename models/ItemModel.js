@@ -7,7 +7,6 @@ const itemSchema = new mongoose.Schema({
   token: String,
   tokenId: String,
   price: String,
-  // creator: String,
   owner: String,
   owneDisplay: String,
   ipfsUrl: String,

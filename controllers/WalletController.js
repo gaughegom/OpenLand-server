@@ -8,7 +8,7 @@ exports.getAWallet = async (req, res) => {
 
     address = address.toLowerCase();
 
-    var wallet = await WalletModel.findOne({ address }).exec();
+    var wallet = await WalletModel.findOne({ address }).lean().exec();
     if (wallet) {
       res.status(200).json(wallet);
     } else {
