@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const ItemModel = require("../models/itemModel");
 
 const networkNotification = require("../network/notification");
@@ -8,7 +9,7 @@ const helper = require("./helper");
 // get
 exports.getItemByTokenId = async (req, res) => {
     try {
-        const {token, tokenId} = req.params
+        const { token, tokenId } = req.params;
 
         const item = await ItemModel.aggregate([
             {
@@ -226,6 +227,23 @@ exports.updateOwner = async (req, res) => {
         );
 
         res.status(200).json(updatedItem);
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+};
+
+exports.getIpfs = async (req, res) => {
+    try {
+
+        const {cid} = req.params
+
+        const handledUrl = `https://${cid}.ipfs.nftstorage.link/metadata.json`;
+
+        const result = await axios.get(handledUrl);
+
+        console.log(result)
+
+        res.status(200).json(result.data);
     } catch (e) {
         res.status(500).json({ message: e.message });
     }
