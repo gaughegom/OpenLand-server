@@ -17,22 +17,22 @@ exports.getItemByTokenId = async (req, res) => {
                     from: "collections",
                     localField: "token",
                     foreignField: "token",
-                    as: "collectionName",
-                },
+                    as: "collectionName"
+                }
             },
             {
                 $match: {
                     token,
-                    tokenId,
-                },
+                    tokenId
+                }
             },
             {
                 $set: {
                     collectionName: {
-                        $arrayElemAt: ["$collectionName.name", 0],
-                    },
-                },
-            },
+                        $arrayElemAt: ["$collectionName.name", 0]
+                    }
+                }
+            }
         ]).exec();
 
         res.status(200).json(item);
@@ -50,21 +50,21 @@ exports.getItemByToken = async (req, res) => {
                     from: "collections",
                     localField: "token",
                     foreignField: "token",
-                    as: "collectionName",
-                },
+                    as: "collectionName"
+                }
             },
             {
                 $match: {
-                    token,
-                },
+                    token
+                }
             },
             {
                 $set: {
                     collectionName: {
-                        $arrayElemAt: ["$collectionName.name", 0],
-                    },
-                },
-            },
+                        $arrayElemAt: ["$collectionName.name", 0]
+                    }
+                }
+            }
         ]).exec();
 
         res.status(200).json(items);
@@ -81,16 +81,16 @@ exports.getAllItem = async (req, res) => {
                     from: "collections",
                     localField: "token",
                     foreignField: "token",
-                    as: "collectionName",
-                },
+                    as: "collectionName"
+                }
             },
             {
                 $set: {
                     collectionName: {
-                        $arrayElemAt: ["$collectionName.name", 0],
-                    },
-                },
-            },
+                        $arrayElemAt: ["$collectionName.name", 0]
+                    }
+                }
+            }
         ]).exec();
         res.status(200).json(allItems);
     } catch (err) {
@@ -146,14 +146,18 @@ exports.insertItem = async (req, res) => {
             status,
             endAt,
             owner,
-            tokenId,
+            tokenId
         } = req.body;
         console.log(req.body);
 
         properties = JSON.parse(properties);
 
         var imgFile = req.files.file;
-        var sendImg = await uploadFileS3("item", imgFile.data, tokenId);
+        var sendImg = await uploadFileS3(
+            "item/" + collectionAddress,
+            imgFile.data,
+            tokenId
+        );
         var thumbLink = sendImg.Location;
 
         var item = {
@@ -166,7 +170,7 @@ exports.insertItem = async (req, res) => {
             token: collectionAddress,
             owner: owner.toLowerCase(),
             status,
-            endAt: endAt ? new Date(+endAt) : undefined,
+            endAt: endAt ? new Date(+endAt) : undefined
         };
 
         var ipfsUrl = await helper.getIpfs(item, imgFile);
@@ -178,7 +182,7 @@ exports.insertItem = async (req, res) => {
         res.status(200).json("newItem");
     } catch (e) {
         res.status(500).json({
-            message: e.message,
+            message: e.message
         });
     }
 };
@@ -234,14 +238,13 @@ exports.updateOwner = async (req, res) => {
 
 exports.getIpfs = async (req, res) => {
     try {
-
-        const {cid} = req.params
+        const { cid } = req.params;
 
         const handledUrl = `https://${cid}.ipfs.nftstorage.link/metadata.json`;
 
         const result = await axios.get(handledUrl);
 
-        console.log(result)
+        console.log(result);
 
         res.status(200).json(result.data);
     } catch (e) {
