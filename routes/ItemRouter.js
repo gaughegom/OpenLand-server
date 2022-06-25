@@ -14,6 +14,7 @@ router.route("/price").put(itemController.updatePrice);
 router.route("/owner").put(itemController.updateOwner);
 router.route("/detail/:token/:tokenId").get(itemController.getItemByTokenId)
 router.route("/token/:token").get(itemController.getItemByToken)
+router.route("/owner/:owner").get(itemController.getItemsByOwner)
 router.route("/ipfs/:cid").get(itemController.getIpfs)
 
 // .post(itemController.addWallet)

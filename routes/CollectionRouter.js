@@ -11,8 +11,7 @@ const router = express.Router();
 router.route("/all").get(collectionController.getAllCollections);
 router.route("/token/:token").get(collectionController.getCollectionsByToken);
 router.route("/").post(auth, collectionController.insertCollection);
-router.route("/creator/:creator").get(collectionController.getCollectionsByOwner);
-
+router.route("/owner/:owner").get(collectionController.getCollectionsByOwner);
 // .post(itemController.addWallet)
 // .put(itemController);
 

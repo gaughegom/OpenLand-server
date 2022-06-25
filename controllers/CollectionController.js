@@ -66,7 +66,6 @@ exports.getAllCollections = async (req, res) => {
             },
         ]).exec();
 
-        console.log(collections);
         res.status(200).json(collections);
     } catch (e) {
         res.status(500).json({ message: e.message });
@@ -74,9 +73,30 @@ exports.getAllCollections = async (req, res) => {
 };
 exports.getCollectionsByOwner = async (req, res) => {
     try {
-        const { creator } = req.params;
-        const creatorLower = creator.toLowerCase();
-        const collections = await CollectionModel.find({ creator: creatorLower }).exec();
+        const { owner } = req.params;
+        const ownerLowwerCase = owner.toLowerCase();
+        const collections = await CollectionModel.aggregate([
+            {
+                $lookup: {
+                    from: "wallets",
+                    localField: "creator",
+                    foreignField: "address",
+                    as: "creatorDisplayName",
+                },
+            },
+            {
+                $match: {
+                    creator: ownerLowwerCase,
+                },
+            },
+            {
+                $set: {
+                    creatorDisplayName: {
+                        $arrayElemAt: ["$creatorDisplayName.displayName", 0],
+                    },
+                },
+            },
+        ]).exec();
         res.status(200).json(collections);
     } catch (e) {
         res.status(500).json({ message: e.message });

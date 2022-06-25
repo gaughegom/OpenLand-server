@@ -13,6 +13,12 @@ exports.getItemByTokenId = async (req, res) => {
 
         const item = await ItemModel.aggregate([
             {
+                $match: {
+                    token,
+                    tokenId
+                }
+            },
+            {
                 $lookup: {
                     from: "collections",
                     localField: "token",
@@ -21,15 +27,24 @@ exports.getItemByTokenId = async (req, res) => {
                 }
             },
             {
-                $match: {
-                    token,
-                    tokenId
+                $set: {
+                    collectionName: {
+                        $arrayElemAt: ["$collectionName.name", 0]
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "wallets",
+                    localField: "owner",
+                    foreignField: "address",
+                    as: "ownerDisplay"
                 }
             },
             {
                 $set: {
-                    collectionName: {
-                        $arrayElemAt: ["$collectionName.name", 0]
+                    ownerDisplay: {
+                        $arrayElemAt: ["$ownerDisplay.displayName", 0]
                     }
                 }
             }
@@ -126,8 +141,31 @@ exports.getAllItem = async (req, res) => {
 
 exports.getItemsByOwner = async (req, res) => {
     try {
-        const { address } = req.params;
-        const items = ItemModel.find({ owner: address }).exec();
+        const { owner } = req.params;
+
+        const items = await ItemModel.aggregate([
+            {
+                $lookup: {
+                    from: "collections",
+                    localField: "token",
+                    foreignField: "token",
+                    as: "collectionName"
+                }
+            },
+            {
+                $match: {
+                    owner
+                }
+            },
+            {
+                $set: {
+                    collectionName: {
+                        $arrayElemAt: ["$collectionName.name", 0]
+                    }
+                }
+            }
+        ]).exec();
+
         res.status(200).json(items);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -169,7 +207,7 @@ exports.insertItem = async (req, res) => {
             tokenId: tokenId,
             token: collectionAddress,
             owner: owner.toLowerCase(),
-            status,
+            status: +status,
             endAt: endAt ? new Date(+endAt) : undefined
         };
 
@@ -194,7 +232,7 @@ exports.updatePrice = async (req, res) => {
 
         const updatedItem = await ItemModel.findOneAndUpdate(
             { token, tokenId },
-            { price },
+            { price: price },
             { new: true }
         );
 
@@ -243,8 +281,6 @@ exports.getIpfs = async (req, res) => {
         const handledUrl = `https://${cid}.ipfs.nftstorage.link/metadata.json`;
 
         const result = await axios.get(handledUrl);
-
-        console.log(result);
 
         res.status(200).json(result.data);
     } catch (e) {
