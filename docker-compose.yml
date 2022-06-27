@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - appdb:/data/db
+    
+  node-app:
+    image: node-server-app
+    build: .
+    container_name: node-server
+    ports:
+      - "80:5000"
+      - "443:4433"
+    environment:
+      - DATABASE_LOCAL=mongodb://mongo:27017/OPENSEA
+    depends_on:
+      - mongo
+
+volumes:
+  appdb:

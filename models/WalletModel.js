@@ -1,16 +1,16 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const walletSchema = new mongoose.Schema({
   address: String,
   displayName: String,
-  imageURL: String,
+  imageUrl: String,
+  bannerUrl: String,
   description: String,
-})
+  email: String
+});
 
-const Wallet = mongoose.model('Wallet', walletSchema)
-module.exports = Wallet
-// method
-module.exports.isValidWallet = (newValid) => {
-  //
-  return true
-}
+walletSchema.methods.isValid = function () {
+  console.log("valid");
+};
+
+module.exports = mongoose.model("Wallet", walletSchema);
