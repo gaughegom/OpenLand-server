@@ -35,6 +35,8 @@ exports.insertCollection = async (req, res) => {
         if (name) {
             newCollection.name = name;
         }
+        if (sendBanner) newCollection.bannerUrl = sendBanner.Location;
+        if (sendLogo) newCollection.logoUrl = sendLogo.Location;
         newCollection.token = token;
         newCollection.creator = address.toLowerCase();
         const insertCollection = new CollectionModel(newCollection);
